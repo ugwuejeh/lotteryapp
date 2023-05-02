@@ -1,0 +1,33 @@
+import smtplib
+
+def send_email(sender_email, sender_password, recipient_list, subject, body):
+    try:
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.starttls()
+        server.login(sender_email, sender_password)
+
+        message = f'Subject: {subject}\n\n{body}'
+
+        for recipient_email in recipient_list:
+            server.send_message(sender_email, recipient_email, message)
+
+        server.quit()
+        print('Email sent successfully')
+    except:
+        print('Error sending email')
+        
+if __name__ == "__main__":
+    name = input("Enter the name of sender: ")
+    sender = input("Enter the email address of sender: ")
+    password = input("Enter the password of sender: ")
+    recipient_list = []
+    while True:
+        recipient = input("Enter the email address of recipient (type 'done' to finish): ")
+        if recipient.lower() == 'done':
+            break
+        recipient_list.append(recipient)
+
+    subject = input("Enter the subject of the email: ")
+    body = input("Enter the body of the email: ")
+
+    send_email(sender, password, recipient_list, subject, body)
