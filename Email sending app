@@ -1,33 +1,34 @@
+
 import smtplib
+from email.message import EmailMessage
 
-def send_email(sender_email, sender_password, recipient_list, subject, body):
-    try:
-        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        server.starttls()
-        server.login(sender_email, sender_password)
 
-        message = f'Subject: {subject}\n\n{body}'
 
-        for recipient_email in recipient_list:
-            server.send_message(sender_email, recipient_email, message)
+# we asked the user to input his email
+sender = input("Enter the email of the sender: ")
 
-        server.quit()
-        print('Email sent successfully')
-    except:
-        print('Error sending email')
-        
-if __name__ == "__main__":
-    name = input("Enter the name of sender: ")
-    sender = input("Enter the email address of sender: ")
-    password = input("Enter the password of sender: ")
-    recipient_list = []
-    while True:
-        recipient = input("Enter the email address of recipient (type 'done' to finish): ")
-        if recipient.lower() == 'done':
-            break
-        recipient_list.append(recipient)
+# we made the recipient a loop that will continue to run until the user types "done"
+recipient_list = []
+while True:
+    recipient = input("Enter the email address of recipient (type 'done' to finish): ")
+    if recipient.lower() == 'done':
+        break
+    recipient_list.append(recipient)
 
-    subject = input("Enter the subject of the email: ")
-    body = input("Enter the body of the email: ")
+# we asked the user to input password,subject and content
+mypassword = input("Enter your password: ")
+subject = input("Enter the subject of the mail: ")
+content = input("What is your content: ")
 
-    send_email(sender, password, recipient_list, subject, body)
+# we called the objects of the class Emailmessage
+email_msg = EmailMessage()
+email_msg['Subject'] = subject
+email_msg['From'] = sender
+email_msg['To'] = ', '.join(recipient_list)
+email_msg.set_content(content)
+
+# we used smtp to send the message
+with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+    smtp.login(sender,mypassword)
+    smtp.send_message(email_msg)
+    print('email sent')
